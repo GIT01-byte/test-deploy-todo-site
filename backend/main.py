@@ -24,7 +24,6 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         'http://87.228.115.139',
-        'http://loclahost:3000',
         ],
     allow_methods=["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
 )
