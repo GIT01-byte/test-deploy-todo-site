@@ -159,7 +159,7 @@ function App() {
       <div className="centered-wrapper">
         <div className={`container ${isInitialLoad ? 'container-enter' : ''}`}>
           <header className="app-header">
-            <h1 className="app-title">✨ My To-Do List ✨</h1>
+            <h1 className="app-title">✨ To-Do List ✨</h1>
             <p className="app-subtitle">Stay organized and productive</p>
           </header>
 
