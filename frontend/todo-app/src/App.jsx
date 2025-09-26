@@ -83,11 +83,9 @@ function App() {
       
       const data = await response.json();
       // Исправление для complete
-      if (data.success || data.succes) {
-        fetchTasks();
-      } else {
-        setError('Failed to toggle task completion.');
-      }
+
+    fetchTasks();
+
     } catch (e) {
       setError(`Failed to toggle complete: ${e.message}`);
     }
