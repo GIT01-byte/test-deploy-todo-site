@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
-const API_BASE_URL = 'http://87.228.115.139/api';
+const API_BASE_URL = 'http://localhost:8000/tasks/v1';
 
 function App() {
   const [tasks, setTasks] = useState([]);
@@ -26,12 +26,12 @@ function App() {
     setLoading(true);
     try {
       const response = await fetch(API_BASE_URL);
-      if (!response.ok) throw new Error('HTTP error! status: ${response.status}');
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       const data = await response.json();
       setTasks(data.data);
       setError('');
     } catch (e) {
-      setError('Failed to fetch tasks: ${e.message}');
+      setError(`Failed to fetch tasks: ${e.message}`);
     } finally {
       setLoading(false);
       setIsInitialLoad(false);
@@ -49,7 +49,7 @@ function App() {
       return;
     }
     try {
-      const response = await fetch('${API_BASE_URL}/add', {
+      const response = await fetch(`${API_BASE_URL}/add`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: newTaskName, description: newTaskDescription }),
@@ -65,17 +65,17 @@ function App() {
         setError('Failed to add task.');
       }
     } catch (e) {
-      setError('Failed to add task: ${e.message}');
+      setError(`Failed to add task: ${e.message}`);
     }
   };
 
   const toggleComplete = async (taskId) => {
     try {
-      const response = await fetch('${API_BASE_URL}/${taskId}/complete', { method: 'PATCH' });
-      if (!response.ok) throw new Error('HTTP error! status: ${response.status}');
+      const response = await fetch(`${API_BASE_URL}/${taskId}/complete`, { method: 'PATCH' });
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       fetchTasks();
     } catch (e) {
-      setError('Failed to toggle complete: ${e.message}');
+      setError(`Failed to toggle complete: ${e.message}`);
     }
   };
 
@@ -92,14 +92,14 @@ function App() {
   const confirmDelete = async () => {
     if (!taskToDelete) return;
     try {
-      const response = await fetch('${API_BASE_URL}/${taskToDelete.id}/delete', { method: 'DELETE' });
-      if (!response.ok) throw new Error('HTTP error! status: ${response.status}');
+      const response = await fetch(`${API_BASE_URL}/${taskToDelete.id}/delete`, { method: 'DELETE' });
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       setModalVisible(false);
       setTaskToDelete(null);
       fetchTasks();
       showSuccessMessage('Task deleted successfully!');
     } catch (e) {
-      setError('Failed to delete task: ${e.message}');
+      setError(`Failed to delete task: ${e.message}`);
     }
   };
 
@@ -110,18 +110,18 @@ function App() {
       return;
     }
     try {
-      const queryParams = taskIdsToDelete.map(id => 'task_ids=${id}').join('&');
-      const response = await fetch('${API_BASE_URL}/delete-many?${queryParams}', { method: 'DELETE' });
+      const queryParams = taskIdsToDelete.map(id => `task_ids=${id}`).join('&');
+      const response = await fetch(`${API_BASE_URL}/delete-many?${queryParams}`, { method: 'DELETE' });
       const data = await response.json();
       if (data.success) {
         fetchTasks();
         setError('');
-        showSuccessMessage('Deleted ${taskIdsToDelete.length} completed tasks!');
+        showSuccessMessage(`Deleted ${taskIdsToDelete.length} completed tasks!`);
       } else {
         setError("Failed to delete tasks.");
       }
     } catch (error) {
-      setError('Error deleting tasks: ${error.message}');
+      setError(`Error deleting tasks: ${error.message}`);
     }
   };
 
@@ -130,10 +130,11 @@ function App() {
       addTask();
     }
   };
+
   return (
     <div className="app-container">
       <div className="centered-wrapper">
-        <div className={'container ${isInitialLoad ? "container-enter" : }'}>
+        <div className={`container ${isInitialLoad ? 'container-enter' : ''}`}>
           <header className="app-header">
             <h1 className="app-title">✨ My To-Do List ✨</h1>
             <p className="app-subtitle">Stay organized and productive</p>
@@ -194,8 +195,8 @@ function App() {
                     {tasks.map((task, index) => (
                       <li
                         key={task.id}
-                        className={'task-item ${task.completed ? "completed" : }'}
-                        style={{ animationDelay: '${index * 0.1}s' }}
+                        className={`task-item ${task.completed ? 'completed' : ''}`}
+                        style={{ animationDelay: `${index * 0.1}s` }}
                       >
                         <div className="task-content">
                           <input
@@ -224,6 +225,7 @@ function App() {
               </>
             )}
           </div>
+
           {modalVisible && (
             <div className="modal-overlay" onClick={closeModal}>
               <div className="modal" onClick={(e) => e.stopPropagation()}>
