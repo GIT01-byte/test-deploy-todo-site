@@ -54,15 +54,22 @@ function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: newTaskName, description: newTaskDescription }),
       });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
       const data = await response.json();
-      if (data.succes) {
+      
+      // Исправление: проверяем оба варианта (success и succes)
+      if (data.success || data.succes) {
         fetchTasks();
         setNewTaskName('');
         setNewTaskDescription('');
         setError('');
         showSuccessMessage('Task added successfully!');
       } else {
-        setError('Failed to add task.');
+        setError('Failed to add task. Server returned false.');
       }
     } catch (e) {
       setError(`Failed to add task: ${e.message}`);
@@ -73,7 +80,14 @@ function App() {
     try {
       const response = await fetch(`${API_BASE_URL}/${taskId}/complete`, { method: 'PATCH' });
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-      fetchTasks();
+      
+      const data = await response.json();
+      // Исправление для complete
+      if (data.success || data.succes) {
+        fetchTasks();
+      } else {
+        setError('Failed to toggle task completion.');
+      }
     } catch (e) {
       setError(`Failed to toggle complete: ${e.message}`);
     }
@@ -94,10 +108,17 @@ function App() {
     try {
       const response = await fetch(`${API_BASE_URL}/${taskToDelete.id}/delete`, { method: 'DELETE' });
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-      setModalVisible(false);
-      setTaskToDelete(null);
-      fetchTasks();
-      showSuccessMessage('Task deleted successfully!');
+      
+      const data = await response.json();
+      // Исправление для delete
+      if (data.success || data.succes) {
+        setModalVisible(false);
+        setTaskToDelete(null);
+        fetchTasks();
+        showSuccessMessage('Task deleted successfully!');
+      } else {
+        setError('Failed to delete task.');
+      }
     } catch (e) {
       setError(`Failed to delete task: ${e.message}`);
     }
@@ -112,8 +133,12 @@ function App() {
     try {
       const queryParams = taskIdsToDelete.map(id => `task_ids=${id}`).join('&');
       const response = await fetch(`${API_BASE_URL}/delete-many?${queryParams}`, { method: 'DELETE' });
+      
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      
       const data = await response.json();
-      if (data.succes) {
+      // Исправление для delete-many
+      if (data.success || data.succes) {
         fetchTasks();
         setError('');
         showSuccessMessage(`Deleted ${taskIdsToDelete.length} completed tasks!`);
@@ -136,7 +161,7 @@ function App() {
       <div className="centered-wrapper">
         <div className={`container ${isInitialLoad ? 'container-enter' : ''}`}>
           <header className="app-header">
-            <h1 className="app-title">✨ To-Do List ✨</h1>
+            <h1 className="app-title">✨ My To-Do List ✨</h1>
             <p className="app-subtitle">Stay organized and productive</p>
           </header>
 
