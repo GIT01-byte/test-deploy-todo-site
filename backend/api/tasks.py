@@ -63,5 +63,5 @@ async def delete_tasks(task_ids: List[int] = Query(..., description="Списо�
         if task is None:
             raise HTTPException(status_code=404, detail=f"Задача с ID {task_id} не найдена") 
 
-    await TaskRepository.delete_tasks(task_ids) 
+    await TaskRepository.delete_many_tasks(task_ids) 
     return {'success': True, 'deleted_count': len(task_ids)}

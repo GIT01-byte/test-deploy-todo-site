@@ -50,7 +50,7 @@ class TaskRepository:
             return True
 
     @classmethod
-    async def delete_task(cls, task_ids: List[int]):
+    async def delete_many_tasks(cls, task_ids: List[int]):
         async with new_session() as session:
             query = delete(TaskOrm).where(TaskOrm.id.in_(task_ids))
             await session.execute(query)
