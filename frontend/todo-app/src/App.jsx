@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
-const API_BASE_URL = 'http://localhost:8000/tasks/v1';
+const API_BASE_URL = 'http://87.228.115.139/api';
 
 function App() {
   const [tasks, setTasks] = useState([]);
