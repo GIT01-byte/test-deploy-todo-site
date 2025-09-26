@@ -23,15 +23,13 @@ app = FastAPI(lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        'http://localhost:5173',
-        'http://87.228.115.139'
-            ],
-    allow_credentials=True,
-    allow_methods=['*'],
-    allow_headers=['*'],
+        'http://87.228.115.139',
+        'http://loclahost:5173',
+        ],
+    allow_methods=["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
 )
 
 app.include_router(tasks_router)
 
 if __name__ == '__main__':
-    uvicorn.run(app, reload=True, host='0.0.0.0', port=8000)
+    uvicorn.run(f'{__name__}:app', reload=True)
