@@ -10,7 +10,7 @@ router = APIRouter(
 )
 
 
-@router.get('', summary='Получить все задачи 📄')
+@router.get('/', summary='Получить все задачи 📄')
 async def get_tasks():
     tasks = await TaskRepository.get_all()
     return {'data': tasks}
