@@ -6,7 +6,6 @@ from schemas.tasks import TaskCreateSchema, TaskSchema, TaskUpdateSchema, TaskID
 from database.repository import TaskRepository
 
 router = APIRouter(
-    prefix='/tasks/v1',
     tags=['To-do ✅']
 )
 
