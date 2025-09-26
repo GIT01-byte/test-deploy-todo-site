@@ -55,7 +55,7 @@ function App() {
         body: JSON.stringify({ name: newTaskName, description: newTaskDescription }),
       });
       const data = await response.json();
-      if (data.success) {
+      if (data.succes) {
         fetchTasks();
         setNewTaskName('');
         setNewTaskDescription('');
@@ -113,7 +113,7 @@ function App() {
       const queryParams = taskIdsToDelete.map(id => `task_ids=${id}`).join('&');
       const response = await fetch(`${API_BASE_URL}/delete-many?${queryParams}`, { method: 'DELETE' });
       const data = await response.json();
-      if (data.success) {
+      if (data.succes) {
         fetchTasks();
         setError('');
         showSuccessMessage(`Deleted ${taskIdsToDelete.length} completed tasks!`);
@@ -136,7 +136,7 @@ function App() {
       <div className="centered-wrapper">
         <div className={`container ${isInitialLoad ? 'container-enter' : ''}`}>
           <header className="app-header">
-            <h1 className="app-title">✨ My To-Do List ✨</h1>
+            <h1 className="app-title">✨ To-Do List ✨</h1>
             <p className="app-subtitle">Stay organized and productive</p>
           </header>
 
