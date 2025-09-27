@@ -27,4 +27,4 @@ __pycache__/
 Thumbs.db
 
 test/
-task.db
+tasks.db

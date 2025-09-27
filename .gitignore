@@ -40,5 +40,4 @@ eggs/
 Thumbs.db
 
 test/
-task.db
-commands.txt
+tasks.db
