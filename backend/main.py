@@ -7,7 +7,9 @@ from database.tasks import create_table
 from database.tasks import delete_table
 
 from api.tasks import router as tasks_router
+import os
 
+server_url = os.environ.get('SERVER_URL')
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
