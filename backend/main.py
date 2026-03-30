@@ -1,23 +1,32 @@
+import os
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+
+import requests
 import uvicorn
+from api.tasks import router as tasks_router
+from database.tasks import create_table, delete_table
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from database.tasks import create_table
-from database.tasks import delete_table
+SERVER_IP = os.environ.get("SERVER_IP")
+print(f"Server URL: {SERVER_IP}")
+if not SERVER_IP:
+    print("Server URL is not assigned")
+    raise RuntimeError("Server URL is not assigned")
 
-from api.tasks import router as tasks_router
-import os
+test_response = requests.get(f"http://{SERVER_IP}/", timeout=5)
+if test_response.status_code != 200:
+    print(f"Server is not available. Status code: {test_response.status_code}")
+    raise RuntimeError("Server is not available")
 
-server_url = os.environ.get('SERVER_URL')
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await delete_table()
     await create_table()
-    print('База перезапущена...')
+    print("База перезапущена...")
     yield
-    print('Выключение')
+    print("Выключение")
 
 
 app = FastAPI(lifespan=lifespan)
@@ -25,9 +34,9 @@ app = FastAPI(lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-            "http://87.228.115.139/",
-        ],
-    allow_methods=["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+        SERVER_IP,
+    ],
+    allow_methods=["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"],
 )
 
 app.include_router(tasks_router)
